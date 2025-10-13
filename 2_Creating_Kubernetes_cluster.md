@@ -778,6 +778,74 @@ node_group_id = "cat9nhjl3jsrefkdgpcu"
 
 <img width="2473" height="457" alt="image" src="https://github.com/user-attachments/assets/439273a1-bf53-475c-aa01-29e2ccb05c47" />
 
+Таблица конфигурации инфраструктуры Kubernetes
+
+| Компонент | Тип | Название | Конфигурация | Назначение |
+|-----------|-----|----------|--------------|------------|
+| **Terraform** | Backend | S3 | `devops-diplom-yandexcloud-bucket-mrg` | Хранение состояния Terraform |
+| **Provider** | Yandex Cloud | - | Cloud: `b1gphk6fe2qpbmph96u5`<br>Folder: `b1g2pak2mr3h8bt5nfam`<br>Zone: `ru-central1-a` | Подключение к Yandex Cloud |
+| **VPC Network** | Сеть | `devops-diplom-yandexcloud-net` | - | Основная сеть кластера |
+| **Subnet** | Подсеть | `devops-diplom-yandexcloud-central1-a` | Zone: `ru-central1-a`<br>CIDR: `10.0.1.0/24` | Подсеть в зоне A |
+| **Subnet** | Подсеть | `devops-diplom-yandexcloud-central1-b` | Zone: `ru-central1-b`<br>CIDR: `10.0.2.0/24` | Подсеть в зоне B |
+| **Subnet** | Подсеть | `devops-diplom-yandexcloud-central1-d` | Zone: `ru-central1-d`<br>CIDR: `10.0.3.0/24` | Подсеть в зоне D |
+| **Security Group** | Группа безопасности | `k8s-security-group` | Порты: 22, 80, 443, 6443, 10250, 30000-32767 | Управление доступом к кластеру |
+| **Kubernetes Cluster** | Кластер | `devops-diplom-yandexcloud-k8s` | Версия: 1.30<br>Канал: REGULAR<br>Network Policy: CALICO | Управляемый Kubernetes кластер |
+| **Master Node** | Control Plane | - | Zone: `ru-central1-a`<br>Public IP: true<br>Security Group: включена | Управляющая нода кластера |
+| **Node Group** | Группа нод | `devops-diplom-yandexcloud-nodes` | Размер: 3 ноды<br>Зоны: A, B, D | Worker ноды приложений |
+| **Instance Template** | Шаблон ВМ | - | Platform: `standard-v2`<br>CPU: 2 ядра<br>RAM: 2 GB<br>Disk: 32 GB HDD | Конфигурация worker нод |
+| **Networking** | Сетевые настройки | - | NAT: включен<br>Subnets: все 3 зоны<br>Security Groups: включены | Сетевая конфигурация нод |
+| **Scheduling** | Политика планирования | - | Preemptible: true | Использование прерываемых инстансов |
+
+Детализация Security Group Rules
+
+| Направление | Протокол | Порт | CIDR | Описание |
+|-------------|----------|------|------|-----------|
+| Ingress | TCP | 22 | 0.0.0.0/0 | SSH доступ |
+| Ingress | TCP | 80 | 0.0.0.0/0 | HTTP трафик |
+| Ingress | TCP | 443 | 0.0.0.0/0 | Kubernetes API |
+| Ingress | TCP | 6443 | 0.0.0.0/0 | Kubernetes API |
+| Ingress | TCP | 10250 | 10.0.0.0/8 | Kubelet API (внутренний) |
+| Ingress | TCP | 30000-32767 | 0.0.0.0/0 | NodePort сервисы |
+| Egress | ANY | ALL | 0.0.0.0/0 | Исходящий трафик |
+
+Распределение ресурсов по зонам
+
+| Зона | Подсеть | Ноды | Роль |
+|------|---------|------|------|
+| ru-central1-a | 10.0.1.0/24 | Master + 1 Worker | Control Plane + Worker |
+| ru-central1-b | 10.0.2.0/24 | 1 Worker | Worker |
+| ru-central1-d | 10.0.3.0/24 | 1 Worker | Worker |
+
+Спецификации нод
+
+| Параметр | Master | Worker |
+|----------|---------|---------|
+| **Управление** | Yandex Managed | Terraform Managed |
+| **Количество** | 1 (auto-managed) | 3 |
+| **CPU** | - | 2 ядра |
+| **RAM** | - | 2 GB |
+| **Disk** | - | 32 GB HDD |
+| **Тип диска** | - | Network HDD |
+| **Preemptible** | - | Да |
+| **NAT** | Нет | Да |
+| **Public IP** | Да | Нет (через NAT) |
+
+Service Accounts
+
+| Назначение | ID |
+|------------|----|
+| Cluster Service Account | `ajer93efebn650j9q2ta` |
+| Node Service Account | `ajer93efebn650j9q2ta` |
+
+Выходные данные (Outputs)
+
+| Output | Описание |
+|--------|-----------|
+| `kubernetes_cluster_id` | ID кластера Kubernetes |
+| `kubernetes_cluster_external_endpoint` | Внешний endpoint API |
+| `node_group_id` | ID группы нод |
+
+
 Вручная обновка конфигурации
 
 ```
