@@ -453,7 +453,7 @@ user@compute-vm-2-1-10-hdd-1742233033265:~/devops-diplom-yandexcloud/terraform$ 
 # Variables
 REGISTRY_ID="crps1p5u048a00f4o97j"
 IMAGE_NAME="testapp"
-VERSION="1.0.0"
+VERSION="1.0.1"
 APP_DIR="../testapp"
 
 echo "Building Docker image..."
@@ -495,7 +495,8 @@ user@compute-vm-2-1-10-hdd-1742233033265:~/devops-diplom-yandexcloud/terraform$ 
 +----------------------+---------------------+------------------------------+---------------+-----------------+
 |          ID          |       CREATED       |             NAME             |     TAGS      | COMPRESSED SIZE |
 +----------------------+---------------------+------------------------------+---------------+-----------------+
-| crpu1gb6ho1u3f1tjm6d | 2025-10-13 19:30:44 | crps1p5u048a00f4o97j/testapp | 1.0.0, latest | 19.5 MB         |
+| crp3kunplon8ue2fur48 | 2025-10-14 17:52:07 | crps1p5u048a00f4o97j/testapp | 1.0.0, latest | 19.5 MB         |
+| crpu1gb6ho1u3f1tjm6d | 2025-10-13 19:30:44 | crps1p5u048a00f4o97j/testapp |               | 19.5 MB         |
 +----------------------+---------------------+------------------------------+---------------+-----------------+
 ```
 
@@ -504,7 +505,7 @@ user@compute-vm-2-1-10-hdd-1742233033265:~/devops-diplom-yandexcloud/terraform$ 
 В файлах в папке k8s/ image на: ```image: cr.yandex/crps1p5u048a00f4o97j/testapp:1.0.0```
 
 ```
-user@compute-vm-2-1-10-hdd-1742233033265:~/devops-diplom-yandexcloud/k8s$ cat deployment-testapp.yaml
+user@compute-vm-2-1-10-hdd-1742233033265:~/devops-diplom-yandexcloud/terraform$ cat ../k8s/deployment-testapp.yaml
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -524,7 +525,7 @@ spec:
     spec:
       containers:
         - name: testapp
-          image: cr.yandex/crps1p5u048a00f4o97j/testapp:1.0.0
+          image: cr.yandex/devops-diplom-registry/testapp:1.0.1
           ports:
             - containerPort: 80
           resources:
@@ -543,7 +544,8 @@ Note, that authentication depends on 'yc' and its config profile 'a21a21b9-2363-
 To access clusters using the Kubernetes API, please use Kubernetes Service Account.
 user@compute-vm-2-1-10-hdd-1742233033265:~/devops-diplom-yandexcloud/terraform$
 user@compute-vm-2-1-10-hdd-1742233033265:~/devops-diplom-yandexcloud/terraform$ kubectl apply -f ../k8s/
-deployment.apps/testapp configured
+deployment.apps/testapp unchanged
+ingress.networking.k8s.io/testapp-ingress unchanged
 service/grafana-service unchanged
 service/testapp-service unchanged
 ```
@@ -554,14 +556,14 @@ service/testapp-service unchanged
 user@compute-vm-2-1-10-hdd-1742233033265:~/devops-diplom-yandexcloud/terraform$ kubectl get pods -o wide
 NAME                       READY   STATUS    RESTARTS   AGE   IP             NODE                        NOMINATED NODE   READINESS GATES
 testapp-86dffd4b4b-c6zlg   1/1     Running   0          32s   10.112.130.5   cl1s0g5l6bcohghv6dje-avib   <none>           <none>
-user@compute-vm-2-1-10-hdd-1742233033265:~/devops-diplom-yandexcloud/terraform$ kubectl get services
-NAME              TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
-grafana-service   NodePort    10.96.168.136   <none>        3000:30101/TCP   5m51s
-kubernetes        ClusterIP   10.96.128.1     <none>        443/TCP          73m
-testapp-service   NodePort    10.96.246.96    <none>        80:30102/TCP     5m51s
+user@compute-vm-2-1-10-hdd-1742233033265:~/devops-diplom-yandexcloud/terraform$ kubectl get pods -o wide
+NAME                       READY   STATUS      RESTARTS   AGE   IP             NODE                        NOMINATED NODE   READINESS GATES
+testapp-86dffd4b4b-c6zlg   0/1     Completed   0          22h   <none>         cl1s0g5l6bcohghv6dje-avib   <none>           <none>
+testapp-86dffd4b4b-d86kg   0/1     Completed   0          70m   <none>         cl1s0g5l6bcohghv6dje-idys   <none>           <none>
+testapp-86dffd4b4b-sgfc2   1/1     Running     0          26m   10.112.130.7   cl1s0g5l6bcohghv6dje-avib   <none>           <none>
 user@compute-vm-2-1-10-hdd-1742233033265:~/devops-diplom-yandexcloud/terraform$ kubectl get deployments
 NAME      READY   UP-TO-DATE   AVAILABLE   AGE
-testapp   1/1     1            1           6m
+testapp   1/1     1            1           22h
 user@compute-vm-2-1-10-hdd-1742233033265:~/devops-diplom-yandexcloud/terraform$ curl -k https://89.169.131.228/healthz
 okuser@compute-vm-2-1-10-hdd-1742233033265:~/devops-diplom-yandexcloud/terraform$ nc -zv 89.169.131.228 443
 Connection to 89.169.131.228 443 port [tcp/https] succeeded!
@@ -594,22 +596,22 @@ spec:
               number: 80
 user@compute-vm-2-1-10-hdd-1742233033265:~/devops-diplom-yandexcloud/terraform$ kubectl get nodes -o wide
 NAME                        STATUS   ROLES    AGE   VERSION   INTERNAL-IP   EXTERNAL-IP      OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
-cl1s0g5l6bcohghv6dje-avib   Ready    <none>   78m   v1.30.1   10.0.1.18     158.160.56.167   Ubuntu 20.04.6 LTS   5.4.0-216-generic   containerd://1.7.25
-cl1s0g5l6bcohghv6dje-idys   Ready    <none>   78m   v1.30.1   10.0.2.34     84.201.152.99    Ubuntu 20.04.6 LTS   5.4.0-216-generic   containerd://1.7.25
-cl1s0g5l6bcohghv6dje-ivac   Ready    <none>   78m   v1.30.1   10.0.3.29     158.160.144.41   Ubuntu 20.04.6 LTS   5.4.0-216-generic   containerd://1.7.25
-user@compute-vm-2-1-10-hdd-1742233033265:~/devops-diplom-yandexcloud/terraform$ curl http://158.160.56.167:30102
+cl1s0g5l6bcohghv6dje-avib   Ready    <none>   23h   v1.30.1   10.0.1.18     89.169.152.21    Ubuntu 20.04.6 LTS   5.4.0-216-generic   containerd://1.7.25
+cl1s0g5l6bcohghv6dje-idys   Ready    <none>   23h   v1.30.1   10.0.2.34     84.201.152.99    Ubuntu 20.04.6 LTS   5.4.0-216-generic   containerd://1.7.25
+cl1s0g5l6bcohghv6dje-ivac   Ready    <none>   23h   v1.30.1   10.0.3.29     158.160.197.70   Ubuntu 20.04.6 LTS   5.4.0-216-generic   containerd://1.7.25
+user@compute-vm-2-1-10-hdd-1742233033265:~/devops-diplom-yandexcloud/terraform$ curl http://158.160.197.70:30102
 <!doctype html>
 <html lang="ru">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Дипломный проект - Куликова А.В., NETOLOGY-SHVIRTD-17</title>
+    <title>Дипломный проект - КУЛИКОВА АЛЁНА ВЛАДИМИРОВНА, NETOLOGY-SHVIRTD-17</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
         .hero-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #000000 0%, #333333 100%);
             color: white;
             padding: 80px 0;
         }
@@ -622,11 +624,6 @@ user@compute-vm-2-1-10-hdd-1742233033265:~/devops-diplom-yandexcloud/terraform$ 
 
         .card:hover {
             transform: translateY(-5px);
-        }
-
-        .feature-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
         }
 
         .system-info {
@@ -644,7 +641,7 @@ user@compute-vm-2-1-10-hdd-1742233033265:~/devops-diplom-yandexcloud/terraform$ 
             <div class="row text-center">
                 <div class="col-12">
                     <h1 class="display-4 fw-bold mb-4">Дипломный проект</h1>
-                    <p class="lead mb-3">Куликова Александра Владимировна</p>
+                    <p class="lead mb-3">КУЛИКОВА АЛЁНА ВЛАДИМИРОВНА</p>
                     <p class="mb-4">Группа: NETOLOGY-SHVIRTD-17</p>
                     <div class="d-flex justify-content-center gap-3 flex-wrap">
                         <span class="badge bg-light text-dark">Версия: v1.0.0</span>
@@ -661,21 +658,18 @@ user@compute-vm-2-1-10-hdd-1742233033265:~/devops-diplom-yandexcloud/terraform$ 
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="card h-100 text-center p-4">
-                        <div class="feature-icon">🚀</div>
                         <h5>Kubernetes</h5>
                         <p class="text-muted">Развертывание и оркестрация контейнеров в облачной среде</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card h-100 text-center p-4">
-                        <div class="feature-icon">⚡</div>
                         <h5>CI/CD</h5>
                         <p class="text-muted">Автоматизация процессов сборки, тестирования и развертывания</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card h-100 text-center p-4">
-                        <div class="feature-icon">🔧</div>
                         <h5>Infrastructure</h5>
                         <p class="text-muted">Управление инфраструктурой как код с использованием Terraform</p>
                     </div>
@@ -690,7 +684,7 @@ user@compute-vm-2-1-10-hdd-1742233033265:~/devops-diplom-yandexcloud/terraform$ 
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="system-info">
-                        <h4 class="text-center mb-4">📊 Информация о системе</h4>
+                        <h4 class="text-center mb-4">Информация о системе</h4>
                         <div class="row text-center">
                             <div class="col-md-6 mb-3">
                                 <strong>Текущее время:</strong>
@@ -712,7 +706,7 @@ user@compute-vm-2-1-10-hdd-1742233033265:~/devops-diplom-yandexcloud/terraform$ 
         <div class="container">
             <div class="row text-center">
                 <div class="col-12">
-                    <p class="mb-0">&copy; 2024 Куликова А.В. | NETOLOGY-SHVIRTD-17</p>
+                    <p class="mb-0">&copy; 2025 КУЛИКОВА А.В. | NETOLOGY-SHVIRTD-17</p>
                     <p class="mb-0">Дипломный проект по DevOps инженерии</p>
                 </div>
             </div>
@@ -756,6 +750,4 @@ user@compute-vm-2-1-10-hdd-1742233033265:~/devops-diplom-yandexcloud/terraform$ 
 </html>
 ```
 
-<img width="2160" height="1450" alt="image" src="https://github.com/user-attachments/assets/83a82a04-f9ef-4300-9c88-2f54d410c450" />
-
-> Страница была сгенерирована (не обладаю знаниями по созданию web) и мое имя было написано с ошибкой *
+<img width="2085" height="1281" alt="image" src="https://github.com/user-attachments/assets/ffd65c70-9bc2-4aa2-a02c-7e7b70fede33" />
