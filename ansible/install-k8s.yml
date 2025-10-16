@@ -1,0 +1,80 @@
+---
+- name: Install Kubernetes single-node cluster
+  hosts: kube_control_plane
+  become: yes
+  tasks:
+    - name: Update apt package cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install required packages
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+        state: present
+
+    - name: Add Kubernetes GPG key
+      apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        state: present
+
+    - name: Add Kubernetes repository
+      apt_repository:
+        repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+        state: present
+        filename: kubernetes
+
+    - name: Install kubeadm, kubelet, kubectl
+      apt:
+        name:
+          - kubelet=1.28.0-00
+          - kubeadm=1.28.0-00
+          - kubectl=1.28.0-00
+        state: present
+        force: yes
+
+    - name: Hold kubelet, kubeadm, kubectl
+      command: apt-mark hold kubelet kubeadm kubectl
+
+    - name: Initialize Kubernetes cluster
+      command: kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all
+      args:
+        creates: /etc/kubernetes/admin.conf
+
+    - name: Create .kube directory
+      file:
+        path: /home/ubuntu/.kube
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+
+    - name: Copy admin.conf to user directory
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: /home/ubuntu/.kube/config
+        remote_src: yes
+        owner: ubuntu
+        group: ubuntu
+
+    - name: Install Flannel network plugin
+      command: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+      environment:
+        KUBECONFIG: /etc/kubernetes/admin.conf
+
+- name: Join worker nodes
+  hosts: kube_node
+  become: yes
+  tasks:
+    - name: Get join command from master
+      shell: kubeadm token create --print-join-command
+      register: join_command
+      delegate_to: "{{ groups['kube_control_plane'][0] }}"
+
+    - name: Join worker to cluster
+      command: "{{ join_command.stdout }} --ignore-preflight-errors=all"
+      when: inventory_hostname != groups['kube_control_plane'][0]
