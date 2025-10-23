@@ -3534,24 +3534,6 @@ https://github.com/Kulikova-A18/devops-diplom-yandexcloud-app/tree/main/.github/
 
 https://github.com/Kulikova-A18/devops-diplom-yandexcloud/tree/main/ansible
 
-[примечание]
-
-Меня случайно забанили и машинки остановились.
-
-для фикса использовала:
-
-```
-rm -f ~/.kube/config
-yc managed-kubernetes cluster get-credentials cataclo3jasi4sdlfq89 --external
-kubectl config get-contexts
-kubectl config current-context
-kubectl delete namespace app
-kubectl delete serviceaccount cicd-service-account
-kubectl delete configmap cicd-config
-kubectl delete secret cicd-secrets
-kubectl delete clusterrolebinding cicd-cluster-admin
-helm uninstall kube-prometheus-stack -n monitoringnamespace "app" deleted
-terraform init
 terraform plan
 terraform apply -auto-approve
 ```
