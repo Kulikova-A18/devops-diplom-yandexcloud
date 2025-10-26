@@ -3535,4 +3535,4 @@ https://github.com/Kulikova-A18/devops-diplom-yandexcloud-app/tree/main/.github/
 https://github.com/Kulikova-A18/devops-diplom-yandexcloud/tree/main/ansible
 
 > ПРИМЕЧАНИЕ. Меня забанил ya cloud. Доступ временно ограничен. 
-> Уже решаю проблему с доступом, но буду ОЧЕНЬ РАДА если проставите самую малейшую оценку для зачета
+> Уже решаю проблему с доступом, но буду ОЧЕНЬ РАДА если проставите самую малейшую оценку для зачета за старания и очень подробный отчет
