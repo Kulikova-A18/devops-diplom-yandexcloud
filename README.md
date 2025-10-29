@@ -3516,11 +3516,6 @@ resource "helm_release" "kube_prometheus_stack" {
 
 Вся инструкция по запуску скриптов располагается по следующей ссылке: https://github.com/Kulikova-A18/devops-diplom-yandexcloud/blob/main/deploy-all.md
 
-> ПРИМЕЧАНИЕ на момент 29.10.2025.
-> Меня забанили на ya cloud. Нахожусь на стадии разбана.
-> Очень сильно подгоняют на работе завершить обучение. Ждать долго не позволят... :( 
-> Буду благодарна за все старания и подробный отчет оценке "УДОВЛЕТВОРИТЕЛЬНО"
-
 <img width="1790" height="464" alt="image" src="https://github.com/user-attachments/assets/aff434d0-4cb2-42fb-bfde-813bf7897532" />
 
 Репозиторий с конфигурационными файлами Terraform: 
@@ -3554,8 +3549,3 @@ https://github.com/Kulikova-A18/devops-diplom-yandexcloud-app/tree/main/.github/
 Репозиторий с конфигурацией ansible:
 
 https://github.com/Kulikova-A18/devops-diplom-yandexcloud/tree/main/ansible
-
-> ДУБЛИРОВАНИЕ. 
-> Буду благодарна за все старания и подробный отчет оценке "УДОВЛЕТВОРИТЕЛЬНО".
-> На момент 29.10.2025 нахожусь на стадии разбана моего ya cloud. Очень надеялась успеть до вашей проверки, но еще в процессе...
-
