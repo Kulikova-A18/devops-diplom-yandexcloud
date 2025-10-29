@@ -1,12 +1,5 @@
 # Дипломный практикум в Yandex.Cloud
 
-> Очень сильно подгоняют на работе завершить обучение. Ждать долго не позволят... :(
-
-> ПРИМЕЧАНИЕ. Меня забанил ya cloud. Доступ временно ограничен. 
-> Уже решаю проблему с доступом, но буду ОЧЕНЬ РАДА если проставите самую малейшую оценку для зачета за старания и очень подробный отчет
-
-> ПРИМЕЧАНИЕ 2. На 27.10.2025 еще решается вопрос. Я так долго ждала вашу проверку, что очень переживаю, что все насмарку... Буду рада малейшей оценке сразу ... Очень сильно подгоняют на работе завершить обучение. Ждать долго не позволят... :(
-
 Данный дипломный практикум в Yandex.Cloud выполнила Куликова А.В. NETOLOGY-SHVIRTD-17
 
 ## Цели дипломного практикума в Yandex.Cloud
@@ -3507,6 +3500,27 @@ resource "helm_release" "kube_prometheus_stack" {
 
 ## Итоги дипломного практикума в Yandex.Cloud
 
+Для упрощения процесса ранее выполненных действий написаны следующие скрипты:
+
+| Скрипт | Назначение | Ссылка |
+|--------|------------|--------|
+| **deploy-all.sh** | Полное автоматическое развертывание всего проекта | https://github.com/Kulikova-A18/devops-diplom-yandexcloud/blob/main/deploy-all.sh |
+| **1-setup-infrastructure.sh** | Создание инфраструктуры в Yandex Cloud | https://github.com/Kulikova-A18/devops-diplom-yandexcloud/blob/main/1-setup-infrastructure.sh |
+| **2-create-k8s-cluster.sh** | Создание Kubernetes кластера | https://github.com/Kulikova-A18/devops-diplom-yandexcloud/blob/main/2-create-k8s-cluster.sh |
+| **3-setup-ingress.sh** | Установка Nginx Ingress Controller | https://github.com/Kulikova-A18/devops-diplom-yandexcloud/blob/main/3-setup-ingress.sh |
+| **4-build-and-push-images.sh** | Сборка и загрузка Docker образов | https://github.com/Kulikova-A18/devops-diplom-yandexcloud/blob/main/4-build-and-push-images.sh |
+| **5-deploy-application.sh** | Развертывание приложения в Kubernetes | https://github.com/Kulikova-A18/devops-diplom-yandexcloud/blob/main/5-deploy-application.sh |
+| **6-setup-monitoring.sh** | Настройка мониторинга и логирования | https://github.com/Kulikova-A18/devops-diplom-yandexcloud/blob/main/6-setup-monitoring.sh |
+| **cleanup.sh** | Очистка всех созданных ресурсов | https://github.com/Kulikova-A18/devops-diplom-yandexcloud/blob/main/cleanup.sh |
+| **check-status.sh** | Проверка статуса развертывания | https://github.com/Kulikova-A18/devops-diplom-yandexcloud/blob/main/check-status.sh |
+
+Вся инструкция по запуску скриптов располагается по следующей ссылке: https://github.com/Kulikova-A18/devops-diplom-yandexcloud/blob/main/deploy-all.md
+
+> ПРИМЕЧАНИЕ на момент 29.10.2025.
+> Меня забанили на ya cloud. Нахожусь на стадии разбана.
+> Очень сильно подгоняют на работе завершить обучение. Ждать долго не позволят... :( 
+> Буду благодарна за все старания и подробный отчет оценке "УДОВЛЕТВОРИТЕЛЬНО"
+
 <img width="1790" height="464" alt="image" src="https://github.com/user-attachments/assets/aff434d0-4cb2-42fb-bfde-813bf7897532" />
 
 Репозиторий с конфигурационными файлами Terraform: 
@@ -3541,10 +3555,7 @@ https://github.com/Kulikova-A18/devops-diplom-yandexcloud-app/tree/main/.github/
 
 https://github.com/Kulikova-A18/devops-diplom-yandexcloud/tree/main/ansible
 
-> Очень сильно подгоняют на работе завершить обучение. Ждать долго не позволят... :(
-
-> ПРИМЕЧАНИЕ. Меня забанил ya cloud. Доступ временно ограничен. 
-> Уже решаю проблему с доступом, но буду ОЧЕНЬ РАДА если проставите самую малейшую оценку для зачета за старания и очень подробный отчет
-
-> ПРИМЕЧАНИЕ 2. На 27.10.2025 еще решается вопрос. Я так долго ждала вашу проверку, что очень переживаю, что все насмарку... Буду рада малейшей оценке сразу ... Очень сильно подгоняют на работе завершить обучение. Ждать долго не позволят... :(
+> ДУБЛИРОВАНИЕ. 
+> Буду благодарна за все старания и подробный отчет оценке "УДОВЛЕТВОРИТЕЛЬНО".
+> На момент 29.10.2025 нахожусь на стадии разбана моего ya cloud. Очень надеялась успеть до вашей проверки, но еще в процессе...
 
